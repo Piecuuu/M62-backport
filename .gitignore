@@ -124,3 +124,10 @@ all.config
 
 # fetched Android config fragments
 kernel/configs/android-*.cfg
+
+# Compiler (is downloaded by build.sh)
+toolchain/neutron*
+
+# Build zips, .imgs, etc.
+build/out
+out/
