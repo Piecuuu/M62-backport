@@ -45,6 +45,7 @@ echo "Preparing the build environment..."
 
 pushd $(dirname "$0") > /dev/null
 CORES=`cat /proc/cpuinfo | grep -c processor`
+#CORES=14
 
 # Define toolchain variables
 CLANG_DIR=$PWD/toolchain/neutron_18
@@ -159,11 +160,11 @@ echo "-----------------------------------------------"
 echo "Building kernel using "$KERNEL_DEFCONFIG""
 echo "Generating configuration file..."
 echo "-----------------------------------------------"
-make ${MAKE_ARGS} -j$CORES exynos9820_defconfig $MODEL.config $KSU $RECOVERY || abort
+make ARCH=arm64 O=out -j$CORES exynos9820_defconfig $MODEL.config $KSU $RECOVERY || abort
 
 echo "Building kernel..."
 echo "-----------------------------------------------"
-make ${MAKE_ARGS} -j$CORES || abort
+make ${MAKE_ARGS} HOSTCC=gcc HOSTCXX=g++ HOSTLD=ld -j$CORES || abort
 
 # Define constant variables
 KERNEL_PATH=build/out/$MODEL/Image
