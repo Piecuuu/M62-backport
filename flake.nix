@@ -10,7 +10,7 @@
       fhs = pkgs.buildFHSEnv {
         name = "fhs-shell";
         targetPkgs = pkgs: with pkgs; [
-          bc openssl openssl.dev ncurses zlib zlib.dev zstd zstd.dev glibc glibc.dev libxml2_13 libxml2_13.dev
+          bc openssl openssl.dev ncurses5 ncurses5.dev zlib zlib.dev zstd zstd.dev glibc glibc.dev libxml2_13 libxml2_13.dev lz4
         ];
       };
     in
