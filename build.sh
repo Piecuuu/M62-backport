@@ -16,6 +16,7 @@ Usage: $(basename "$0") [options]
 Options:
     -m, --model [value]     Specify the model code of the phone
     -k, --ksu [Y/n]         Include KernelSU
+    -s, --susfs [Y/n]       Include SuSFS (requires KernelSU)
     -r, --recovery [y/N]    Compile kernel for an Android Recovery
 EOF
 }
@@ -32,6 +33,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --recovery|-r)
             RECOVERY_OPTION="$2"
+            shift 2
+            ;;
+        --susfs|-s)
+            KSU_SUSFS_OPTION="$2"
             shift 2
             ;;
         *)\
@@ -126,15 +131,23 @@ fi
 if [[ "$RECOVERY_OPTION" == "y" ]]; then
     RECOVERY=recovery.config
     KSU_OPTION=n
+    KSU_SUSFS_OPTION=n
+else
+    if [ -z $KSU_OPTION ]; then
+        read -p "Include KernelSU (y/N): " KSU_OPTION
+    fi
+
+    if [[ "$KSU_OPTION" == "y" ]]; then
+        KSU=ksu.config
+        if [ -z $KSU_SUSFS_OPTION ]; then
+            read -p "Include SuSFS? (y/N): " KSU_SUSFS_OPTION
+        fi
+        if [[ "$KSU_SUSFS_OPTION" == "y" ]]; then
+            KSU_SUSFS=susfs.config
+        fi
+    fi
 fi
 
-if [ -z $KSU_OPTION ]; then
-    read -p "Include KernelSU (y/N): " KSU_OPTION
-fi
-
-if [[ "$KSU_OPTION" == "y" ]]; then
-    KSU=ksu.config
-fi
 
 rm -rf build/out/$MODEL
 mkdir -p build/out/$MODEL/zip/files
@@ -150,6 +163,12 @@ else
     echo "KSU: Yes"
 fi
 
+if [ -z "$KSU_SUSFS" ]; then
+    echo "SuSFS: No"
+else
+    echo "SuSFS: Yes"
+fi
+
 if [ -z "$RECOVERY" ]; then
     echo "Recovery: N"
 else
@@ -160,7 +179,7 @@ echo "-----------------------------------------------"
 echo "Building kernel using "$KERNEL_DEFCONFIG""
 echo "Generating configuration file..."
 echo "-----------------------------------------------"
-make ARCH=arm64 O=out -j$CORES exynos9820_defconfig $MODEL.config $KSU $RECOVERY || abort
+make ARCH=arm64 O=out -j$CORES exynos9820_defconfig $MODEL.config $KSU $KSU_SUSFS $RECOVERY || abort
 
 echo "Building kernel..."
 echo "-----------------------------------------------"
