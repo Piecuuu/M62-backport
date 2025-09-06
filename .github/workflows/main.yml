@@ -35,4 +35,4 @@ jobs:
         with:
           name: ${{ matrix.model }}-ksu_susfs
           path: build/out/${{ matrix.model }}/*.zip
-          compression-level: 9
+          compression-level: 0
