@@ -28,7 +28,7 @@ jobs:
     
       - name: Build Kernel
         run: |
-          ./build.sh -m ${{ matrix.model }} -k y -s y -j 2
+          ./build.sh -m ${{ matrix.model }} -k y -s y
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
