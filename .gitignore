@@ -131,3 +131,6 @@ toolchain/neutron*
 # Build zips, .imgs, etc.
 build/out
 out/
+
+# Allow .github
+!.github

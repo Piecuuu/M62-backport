@@ -1,0 +1,38 @@
+name: Kernel Build
+
+on:
+  push:
+    branches: [ "susfs" ]
+  pull_request:
+    branches: [ "susfs" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        model: [beyond0lte, beyond1lte, beyond2lte, beyondx, d1, d1xks, d2s, d2x, d2xks]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: susfs
+          submodules: "recursive"
+          show-progress: "true"
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc libssl-dev unzip cpio libc6-dev libelf-dev libxml2 libxml2-dev lz4 build-essential
+    
+      - name: Build Kernel
+        run: |
+          ./build.sh -m ${{ matrix.model }} -k y -s y -j 2
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.model }}-ksu_susfs
+          path: build/out/${{ matrix.model }}/*.zip
+          compression-level: 9
