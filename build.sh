@@ -21,6 +21,8 @@ Options:
 EOF
 }
 
+CORES=`cat /proc/cpuinfo | grep -c processor` # Default to number of CPU cores
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --model|-m)
@@ -39,6 +41,10 @@ while [[ $# -gt 0 ]]; do
             KSU_SUSFS_OPTION="$2"
             shift 2
             ;;
+        --jobs|-j)
+            CORES="$2"
+            shift 2
+            ;;
         *)\
             unset_flags
             exit 1
@@ -49,8 +55,6 @@ done
 echo "Preparing the build environment..."
 
 pushd $(dirname "$0") > /dev/null
-CORES=`cat /proc/cpuinfo | grep -c processor`
-#CORES=14
 
 # Define toolchain variables
 CLANG_DIR=$PWD/toolchain/neutron_18
