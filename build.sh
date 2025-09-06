@@ -277,7 +277,7 @@ if [ -z "$RECOVERY" ]; then
     else
         NAME="$version"_"$device"-"$MODEL"_"$DATE".zip
     fi
-    zip -r ../"$NAME" .
+    zip -9 -r ../"$NAME" .
     popd > /dev/null
 fi
 
