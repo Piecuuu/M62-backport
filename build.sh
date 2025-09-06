@@ -155,9 +155,9 @@ else
 fi
 
 if [ -z "$RECOVERY" ]; then
-    echo "Recovery: N"
+    echo "Recovery: No"
 else
-    echo "Recovery: Y"
+    echo "Recovery: Yes"
 fi
 
 echo "-----------------------------------------------"
