@@ -259,22 +259,23 @@ if [ -z "$RECOVERY" ]; then
     cp build/updater-script build/out/$MODEL/zip/META-INF/com/google/android/updater-script
 
     version=$(grep -o 'CONFIG_LOCALVERSION="[^"]*"' arch/arm64/configs/exynos9820_defconfig | cut -d '"' -f 2)
-
     version=${version:1}
 
     if [ "$SOC" == "exynos9825" ]; then
-        version="${version}-N10"
+        device="N10"
     else
-        version="${version}-S10"
+        device="S10"
     fi
 
     pushd build/out/$MODEL/zip > /dev/null
-    DATE=`date +"%d-%m-%Y_%H-%M-%S"`    
+    DATE=`date +"%d-%m-%Y_%H-%M-%S"`
 
-    if [[ "$KSU_OPTION" == "y" ]]; then
-        NAME="$version"_"$MODEL"_UNOFFICIAL_KSU_"$DATE".zip
+    if [[ "$KSU_OPTION" == "y" && "$KSU_SUSFS_OPTION" == "y" ]]; then
+        NAME="$version"_"$device"-"$MODEL"_KSU_SUSFS_"$DATE".zip
+    elif [[ "$KSU_OPTION" == "y" ]]; then
+        NAME="$version"_"$device"-"$MODEL"_KSU_"$DATE".zip
     else
-        NAME="$version"_"$MODEL"_UNOFFICIAL_"$DATE".zip
+        NAME="$version"_"$device"-"$MODEL"_"$DATE".zip
     fi
     zip -r ../"$NAME" .
     popd > /dev/null
