@@ -18,6 +18,7 @@ Options:
     -k, --ksu [Y/n]         Include KernelSU
     -s, --susfs [Y/n]       Include SuSFS (requires KernelSU)
     -r, --recovery [y/N]    Compile kernel for an Android Recovery
+    -j, --jobs [value]      Number of parallel jobs to use for building (default: number of CPU cores)
 EOF
 }
 
